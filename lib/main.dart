@@ -36,13 +36,21 @@ class _MyCustomFormState extends State<MyCustomForm> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          TextFormField(
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return "please enter some text";
-              }
-              return null;
-            },
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 8, vertical: 16),
+            child: TextFormField(
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return "please enter some text";
+                }
+                return null;
+              },
+              decoration: InputDecoration(
+                border: OutlineInputBorder(),
+                // hintText: "Enter a search term",
+                labelText: "Enter your username",
+              ),
+            ),
           ),
           Padding(
               padding: const EdgeInsets.symmetric(vertical: 16.0),
