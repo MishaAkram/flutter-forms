@@ -29,6 +29,26 @@ class MyCustomForm extends StatefulWidget {
 
 class _MyCustomFormState extends State<MyCustomForm> {
   final _formKey = GlobalKey<FormState>();
+  final _myController = TextEditingController();
+  late FocusNode myFocusNode;
+  @override
+  void initState() {
+    super.initState();
+    _myController.addListener(_printLatestValues);
+    myFocusNode = FocusNode();
+  }
+
+  @override
+  void dispose() {
+    _myController.dispose();
+    myFocusNode.dispose();
+    super.dispose();
+  }
+
+  void _printLatestValues() {
+    print("second text fields: ${_myController.text}");
+  }
+
   @override
   Widget build(BuildContext context) {
     return Form(
@@ -38,19 +58,34 @@ class _MyCustomFormState extends State<MyCustomForm> {
         children: <Widget>[
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 8, vertical: 16),
-            child: TextFormField(
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return "please enter some text";
-                }
-                return null;
-              },
-              decoration: InputDecoration(
-                border: OutlineInputBorder(),
-                // hintText: "Enter a search term",
-                labelText: "Enter your username",
+            child: Column(
+              children: [
+                TextField(
+                  autofocus: true,
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(),
+                    labelText: "enter your age",
+                  ),),
+              TextFormField(
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return "please enter some text";
+                  }
+                  return null;
+                },
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(),
+                  // hintText: "Enter a search term",
+                  labelText: "Enter your username",
+                ),
+                onChanged: (text) {
+                  print('First text field: $text');
+                },
+                controller: _myController,
+                focusNode: myFocusNode,
               ),
-            ),
+              
+            ]),
           ),
           Padding(
               padding: const EdgeInsets.symmetric(vertical: 16.0),
@@ -62,7 +97,12 @@ class _MyCustomFormState extends State<MyCustomForm> {
                   }
                 },
                 child: Text("Submit"),
-              ))
+              )),
+          FloatingActionButton(
+            onPressed: () => myFocusNode.requestFocus(),
+            tooltip: 'Focus second text field',
+            child: Icon(Icons.edit),
+          )
         ],
       ),
     );
